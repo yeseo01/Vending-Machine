@@ -1,0 +1,292 @@
+$date
+	Sat Jun  7 02:32:41 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module VM_tb $end
+$var wire 5 ! money_account [4:0] $end
+$var wire 2 " change_out [1:0] $end
+$var wire 1 # beverage_out $end
+$var reg 1 $ beverage_take $end
+$var reg 1 % change_take $end
+$var reg 1 & clk $end
+$var reg 2 ' coin_in [1:0] $end
+$var reg 1 ( rstn $end
+$scope module u_vm $end
+$var wire 1 $ beverage_take $end
+$var wire 1 % change_take $end
+$var wire 1 & clk $end
+$var wire 2 ) coin_in [1:0] $end
+$var wire 1 ( rstn $end
+$var parameter 5 * S0 $end
+$var parameter 5 + S1 $end
+$var parameter 5 , S10 $end
+$var parameter 5 - S11 $end
+$var parameter 5 . S12 $end
+$var parameter 5 / S15 $end
+$var parameter 5 0 S16 $end
+$var parameter 5 1 S2 $end
+$var parameter 5 2 S20 $end
+$var parameter 5 3 S3 $end
+$var parameter 5 4 S5 $end
+$var parameter 5 5 S6 $end
+$var parameter 5 6 S7 $end
+$var parameter 5 7 S8 $end
+$var reg 1 8 beverage_next $end
+$var reg 1 9 beverage_now $end
+$var reg 1 # beverage_out $end
+$var reg 2 : change_next [1:0] $end
+$var reg 2 ; change_now [1:0] $end
+$var reg 2 < change_out [1:0] $end
+$var reg 5 = money_account [4:0] $end
+$var reg 5 > state_next [4:0] $end
+$var reg 5 ? state_now [4:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b1000 7
+b111 6
+b110 5
+b101 4
+b11 3
+b10100 2
+b10 1
+b10000 0
+b1111 /
+b1100 .
+b1011 -
+b1010 ,
+b1 +
+b0 *
+$end
+#0
+$dumpvars
+b0 ?
+b0 >
+b0 =
+b0 <
+b0 ;
+b0 :
+09
+08
+bx )
+1(
+bx '
+0&
+x%
+x$
+0#
+b0 "
+b0 !
+$end
+#5000
+1%
+1$
+b1 '
+b1 )
+0(
+1&
+#10000
+0&
+#15000
+1&
+0%
+#20000
+0&
+#25000
+1&
+1%
+0$
+#30000
+0&
+#35000
+1&
+1$
+b10 '
+b10 )
+#40000
+0&
+#45000
+1&
+0%
+#50000
+0&
+#55000
+1&
+1%
+0$
+#60000
+0&
+#65000
+1&
+1$
+b0 '
+b0 )
+#70000
+0&
+#75000
+b101 >
+1&
+0%
+0$
+b10 '
+b10 )
+#80000
+0&
+#85000
+b101 !
+b101 =
+b1010 >
+b101 ?
+1&
+#90000
+0&
+#95000
+b1010 !
+b1010 =
+b1111 >
+b1010 ?
+1&
+#100000
+0&
+#105000
+b1111 !
+b1111 =
+b10100 >
+b1111 ?
+1&
+#110000
+0&
+#115000
+b10100 !
+b10100 =
+b1 :
+b10100 ?
+1&
+b1 '
+b1 )
+#120000
+0&
+#125000
+b1 "
+b1 <
+b0 :
+18
+b1010 >
+b1 ;
+1&
+1$
+b0 '
+b0 )
+#130000
+0&
+#135000
+b0 "
+b0 <
+1#
+b1010 !
+b1010 =
+b0 >
+b0 ;
+19
+b1010 ?
+1&
+#140000
+0&
+#145000
+b0 !
+b0 =
+08
+b1 >
+b0 ?
+1&
+0$
+b1 '
+b1 )
+#150000
+0&
+#155000
+0#
+b1 !
+b1 =
+b10 >
+09
+b1 ?
+1&
+#160000
+0&
+#165000
+b10 !
+b10 =
+b111 >
+b10 ?
+1&
+b10 '
+b10 )
+#170000
+0&
+#175000
+b111 !
+b111 =
+b111 ?
+1&
+1$
+b0 '
+b0 )
+#180000
+0&
+#185000
+b10 :
+b10 >
+1&
+1%
+0$
+#190000
+0&
+#195000
+b10 "
+b10 <
+b10 !
+b10 =
+b1 :
+b1 >
+b10 ;
+b10 ?
+1&
+#200000
+0&
+#205000
+b1 "
+b1 <
+b1 !
+b1 =
+b0 >
+b1 ;
+b1 ?
+1&
+#210000
+0&
+#215000
+b0 !
+b0 =
+b0 :
+b0 ?
+1&
+0%
+#220000
+0&
+#225000
+b0 "
+b0 <
+b0 ;
+1&
+#230000
+0&
+#235000
+1&
