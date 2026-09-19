@@ -1,59 +1,132 @@
-# Vending Machine – FSM-based Digital Logic Project
+# Vending Machine — Verilog Digital Logic Project
 
-A finite state machine (FSM)-based vending machine designed and implemented as a final project for the Spring 2025 Digital Systems course.
+A Verilog implementation of a vending machine developed as a team final project for the Spring 2025 Digital Systems course.
 
-> 🧠 Built using Verilog HDL. Includes custom testbench, state diagram, and simulation scenarios.
+The design accepts ₩1,000 and ₩5,000 coins, maintains an internal balance of up to ₩20,000, dispenses a ₩10,000 beverage, and returns change according to the project specification.
 
----
+## Functional Specification
 
-## 📌 Project Overview
+### Inputs
 
-This vending machine supports:
-- Accepting coins (₩1,000 and ₩5,000)
-- Purchasing a beverage priced at ₩10,000
-- Returning change based on internal balance
-- Handling edge cases like simultaneous inputs or overflow
+| Signal | Width | Description |
+|---|---:|---|
+| `clk` | 1 bit | Clock |
+| `rstn` | 1 bit | Active-high asynchronous reset |
+| `coin_in` | 2 bits | `00`: no coin, `01`: ₩1,000, `10`: ₩5,000 |
+| `beverage_take` | 1 bit | Beverage purchase request |
+| `change_take` | 1 bit | Change return request |
 
----
+`coin_in = 2'b11` is outside the valid input set defined by the assignment.
 
-## 💡 Functional Specification
+### Outputs
 
-### 🟢 Inputs
-| Signal         | Width | Description                                   |
-|----------------|--------|-----------------------------------------------|
-| `coin_in`      | 2-bit  | `00`: no input, `01`: ₩1,000, `10`: ₩5,000     |
-| `beverage_take`| 1-bit  | `1`: Request to buy beverage                  |
-| `change_take`  | 1-bit  | `1`: Request to get change                    |
-| `clk`          | 1-bit  | Clock                                         |
-| `rstn`         | 1-bit  | Active-low reset                              |
+| Signal | Width | Description |
+|---|---:|---|
+| `money_account` | 5 bits | Balance in units of ₩1,000 |
+| `beverage_out` | 1 bit | Beverage dispense pulse |
+| `change_out` | 2 bits | `00`: none, `01`: ₩1,000, `10`: ₩5,000 |
 
-### 🔴 Outputs
-| Signal         | Width | Description                                   |
-|----------------|--------|-----------------------------------------------|
-| `money_account`| 5-bit  | Current balance in units of ₩1,000            |
-| `beverage_out` | 1-bit  | `1`: Dispense beverage                        |
-| `change_out`   | 2-bit  | `01`: ₩1,000 returned, `10`: ₩5,000 returned   |
+## Behavior
 
----
+- The beverage price is ₩10,000.
+- A beverage is dispensed only when the current balance is at least ₩10,000.
+- The stored balance cannot exceed ₩20,000.
+- If an inserted coin would exceed the balance limit, the balance remains unchanged and the inserted coin is returned.
+- Change is returned ₩5,000 at a time whenever possible; otherwise ₩1,000 is returned.
+- If more than one command is asserted simultaneously, the request is ignored.
+- `beverage_out` and `change_out` are asserted as one-cycle pulses.
 
-## ⚙️ Operational Rules
+## Design
 
-- Beverage costs ₩10,000. Cannot buy if balance < 10,000
-- Maximum allowed balance: ₩20,000. Extra coins are returned immediately
-- Change is returned in **₩5,000 first**, if possible, else in **₩1,000**
-- Simultaneous inputs (e.g. coin + button) are ignored
-- All outputs are **1-cycle delayed** and **asserted for only 1 cycle**
+The monetary balance itself is represented directly by the 5-bit `money_account` register.
 
----
+Rather than manually enumerating a separate FSM branch for every reachable monetary value, the registered balance acts as the machine state. Each valid command updates the balance and corresponding output pulse on the active clock edge.
 
-## 🧪 Testbench Coverage
+Conceptually:
 
-The testbench verifies:
-- Normal use (inserting coins → buying → returning change)
-- Invalid simultaneous inputs → ignored
-- Upper limit enforcement (max ₩20,000)
-- Beverage purchase with insufficient balance
-- Change return logic preference (₩5,000 first)
-- All outputs timing: 1-cycle pulse
+```text
+coin only
+    ├─ new balance <= ₩20,000
+    │      └─ increase balance
+    └─ new balance > ₩20,000
+           └─ keep balance and return inserted coin
 
+beverage only
+    ├─ balance >= ₩10,000
+    │      └─ subtract ₩10,000 and pulse beverage_out
+    └─ balance < ₩10,000
+           └─ no state change
 
+change only
+    ├─ balance >= ₩5,000
+    │      └─ subtract ₩5,000 and return ₩5,000
+    ├─ balance > ₩0
+    │      └─ subtract ₩1,000 and return ₩1,000
+    └─ balance = ₩0
+           └─ no state change
+
+multiple simultaneous commands
+    └─ ignored
+```
+
+## Verification
+
+`VM_tb.v` is a self-checking testbench rather than a waveform-only stimulus file.
+
+It systematically verifies the specification across every balance from ₩0 to ₩20,000, including:
+
+- ₩1,000 coin insertion
+- ₩5,000 coin insertion
+- balance-limit overflow and coin return
+- successful beverage purchases
+- rejected purchases below ₩10,000
+- ₩5,000-priority change return
+- simultaneous-command rejection
+- one-cycle output pulse behavior
+- asynchronous reset behavior
+
+The current regression suite performs **232 specification checks with zero failures**.
+
+Run the complete verification suite with:
+
+```bash
+make test
+```
+
+Expected result:
+
+```text
+===== FULL SPECIFICATION SUMMARY =====
+Operations tested: 232
+Failures: 0
+PASS: all specification checks passed.
+```
+
+Clean generated simulation artifacts with:
+
+```bash
+make clean
+```
+
+## Repository Structure
+
+```text
+.
+├── VM.v          # Vending-machine RTL
+├── VM_tb.v       # Self-checking verification testbench
+├── Makefile      # Build and test commands
+├── .gitignore
+└── README.md
+```
+
+## Implementation Audit
+
+The original course implementation represented monetary values using explicitly named states and was tested using the scenarios required by the assignment.
+
+During a later repository audit, additional valid coin sequences exposed incomplete handling of several reachable balance states. For example, balances such as ₩3,000 and ₩6,000 could be reached internally but did not have complete transition and output logic.
+
+The implementation was subsequently refactored so that the monetary balance itself forms the registered machine state. This eliminates the need to manually define transition logic for every reachable balance.
+
+A broader self-checking regression suite was then added to systematically verify behavior across the complete ₩0–₩20,000 balance range.
+
+This preserves the original external interface and required functionality while removing the incomplete-state failure mode and improving reproducibility of verification.

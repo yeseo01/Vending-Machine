@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Simulation artifacts
+build/
+*.vcd
+VM_out
+
+# Local course/reference slides
+*.pptx
