@@ -9,7 +9,7 @@ The design accepts ₩1,000 and ₩5,000 coins, maintains an internal balance of
 ### Inputs
 
 | Signal | Width | Description |
-|---|---:|---|
+| --- | ---: | --- |
 | `clk` | 1 bit | Clock |
 | `rstn` | 1 bit | Active-high asynchronous reset |
 | `coin_in` | 2 bits | `00`: no coin, `01`: ₩1,000, `10`: ₩5,000 |
@@ -21,7 +21,7 @@ The design accepts ₩1,000 and ₩5,000 coins, maintains an internal balance of
 ### Outputs
 
 | Signal | Width | Description |
-|---|---:|---|
+| --- | ---: | --- |
 | `money_account` | 5 bits | Balance in units of ₩1,000 |
 | `beverage_out` | 1 bit | Beverage dispense pulse |
 | `change_out` | 2 bits | `00`: none, `01`: ₩1,000, `10`: ₩5,000 |
